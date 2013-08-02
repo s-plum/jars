@@ -20,7 +20,8 @@ var roundData,
     epsilon,
     binary,
     baseodds,
-    largeodds;
+    largeodds,
+    userid;
     
 function setVars() {
     //update the round counter
@@ -87,6 +88,7 @@ function reset() {
 
 //create object for logging via node/redis
 function logRoundData(urn) {
+    roundData.userid = userid;
     roundData.session = counter;
     roundData.isLeft = binary; //0 = small on right, 1 = small on left
     //log which urn was clicked - more as an FYI to double-check suboptimal variable
@@ -113,7 +115,6 @@ function logRoundData(urn) {
     else {
         roundData.suboptimal = 0;
     }
-    console.log(JSON.stringify(roundData));
 }
 
 //set variables
@@ -136,6 +137,13 @@ for (var i=0; i<urnsLinks.length; i++) {
         return false;
     }
 }
+
+//get user id
+var socket = io.connect('http://localhost');
+socket.on('userid', function (data) {
+    userid = data.userid;
+    console.log(userid);
+});
 
 //bind node/redis functionality to links on click;
 $('#urns a').click( function(e) {

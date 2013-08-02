@@ -3,7 +3,10 @@ var express = require('express');
 var redis = require('redis');
 var fs = require('fs');
 //var _mysql = require('mysql'); //for mysql connection
+var http = require('http');
 var app = express();
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
 
 //for parsing request JSON to send to database
 app.use(express.bodyParser());
@@ -33,14 +36,19 @@ mysql.query('use ' + DATABASE);*/
 var client = redis.createClient();
 //var userid = new Date().toString().split(':').join('-');
 client.setnx('participantcount',0);
-var userid;
+//var userid;
 
 //show given page when app loaded on localhost:3000
 app.get('/', function(req, res) {
     res.render('test.html');
+});
+
+//for assigning unique user id
+io.sockets.on('connection', function (socket) {
     client.get('participantcount', function(err, count) {
 	if (err) return console.log(err);
-	userid = parseInt(count)+1;
+	socket.emit('userid', { userid: parseInt(count)+1 });
+	client.incr('participantcount');
     });
 });
 
@@ -48,8 +56,8 @@ app.get('/', function(req, res) {
 app.post('/endpoint', function(req, res){
 	var obj = {}; //I really don't know what this does, but everything breaks without it.
 	//let's get some redis up in this bitch
-	client.hset('user'+userid+':'+req.body.session, 'user', userid);
-	client.hmset('user'+userid+':'+req.body.session, req.body);
+	//client.hset('user'+userid+':'+req.body.session, 'user', userid);
+	client.hmset('user'+req.body.userid+':'+req.body.session, req.body);
 	client.save();
 	
 	//for sending data to mysql database
@@ -63,7 +71,6 @@ app.post('/endpoint', function(req, res){
 
 //to write data to a csv file
 app.get('/end', function(req, res) {
-    client.incr('participantcount');
     var stream = fs.createWriteStream('data.csv');
     res.render('end.html');
     client.keys('user*', function(err, keys) {
@@ -81,5 +88,5 @@ app.get('/end', function(req, res) {
     });
 });
  
-app.listen(8080);
+server.listen(8080);
 console.log('listening on localhost:8080');
