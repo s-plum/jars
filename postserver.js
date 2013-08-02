@@ -38,14 +38,13 @@ var userid;
 //show given page when app loaded on localhost:3000
 app.get('/', function(req, res) {
     res.render('test.html');
-    client.incr('participantcount');
     client.get('participantcount', function(err, count) {
 	if (err) return console.log(err);
-	userid = count;
+	userid = parseInt(count)+1;
     });
 });
 
-//to respond to .ajax query in html document at localhost:3000
+//to respond to .ajax query in html document at localhost:8080
 app.post('/endpoint', function(req, res){
 	var obj = {}; //I really don't know what this does, but everything breaks without it.
 	//let's get some redis up in this bitch
@@ -64,6 +63,7 @@ app.post('/endpoint', function(req, res){
 
 //to write data to a csv file
 app.get('/end', function(req, res) {
+    client.incr('participantcount');
     var stream = fs.createWriteStream('data.csv');
     res.render('end.html');
     client.keys('user*', function(err, keys) {
@@ -81,5 +81,5 @@ app.get('/end', function(req, res) {
     });
 });
  
-app.listen(3000);
-console.log('listening on localhost:3000');
+app.listen(8080);
+console.log('listening on localhost:8080');
