@@ -139,7 +139,7 @@ for (var i=0; i<urnsLinks.length; i++) {
 }
 
 //get user id
-var socket = io.connect('http://localhost');
+var socket = io.connect();
 socket.on('userid', function (data) {
     userid = data.userid;
     console.log(userid);
