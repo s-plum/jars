@@ -1,0 +1,207 @@
+/* avast, matey, acquire ye compass */
+@import "compass/css3";
+@import "compass/support";
+@import "breakpoint";
+@import url(http://fonts.googleapis.com/css?family=Roboto:300);
+
+@function pem($pixels) {
+	@return #{$pixels/16.0}em
+}
+
+@mixin box-sizing($box-size-param) {
+  -moz-box-sizing: $box-size-param;
+  box-sizing: $box-size-param;
+}
+
+// image-url arguments:
+$path: 'img';
+$cache-buster: false;
+
+/* =================================================================
+style reset - https://github.com/necolas/normalize.css 
+================================================================= */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
+
+a:active, a:focus, a:hover { outline: 0; }
+abbr[title] { border-bottom: 1px dotted; }
+b, strong { font-weight: bold; }
+button, html input[type="button"], input[type="reset"], input[type="submit"] { -webkit-appearance: button; cursor: pointer; }
+button, input, select, textarea { font-family: inherit; font-size: 100%; margin: 0; }
+button, input { line-height: normal; }
+button, select { text-transform: none; }
+button[disabled], html input[disabled] { cursor: default; }
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+[hidden] { display: none; }
+html { font-family: sans-serif; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;}
+img { border: 0; }
+input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+q { quotes: "\201C" "\201D" "\2018" "\2019"; }
+small { font-size: 80%; }
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sub { bottom: -0.25em; }
+sup { top: -0.5em; }
+textarea { overflow: auto; vertical-align: top; }
+table { border-collapse: collapse; border-spacing: 0; }
+ul, ol, li { margin: 0; padding: 0; }
+
+/* =================================================================
+urns and marbles
+================================================================= */
+body {
+  background: #000;
+  color: #fff;
+  font: 300 1em 'Roboto', Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+#urns {
+  background: image-url("bg.jpg") #000 repeat-x left center;
+  height: 100%;
+  left: 0;
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  
+  @media screen and (min-width: 600px) and (min-height: 500px) {
+    background-position: left bottom;
+    display: block;
+  }
+  
+  li {
+    float: left;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 50%;
+    @media screen and (min-width: 600px) and (min-height: 500px) {
+      position: static;
+    }
+  }
+  
+  &.small-right li {
+     float: right;
+    @media screen and (min-width: 600px) and (min-height: 500px) {
+      #small-urn {
+        left: auto;
+        right: 0;
+        width: 40%;
+      }  
+      #large-urn {
+        left: 0;
+        right: auto;
+        width: 60%;
+      }
+    }
+  }
+  
+  a {
+    color: #fff;
+    display: block;
+    font-size: 2em;
+    margin-top: -.5em;
+    opacity: .5;
+    position: absolute;
+    text-align: center;
+    text-decoration: none;
+    top: 50%;
+    @include transition(opacity 200ms ease-in-out);
+    width: 100%;
+    
+    @media screen and (min-width: 600px) and (min-height: 500px) {
+      height: 100%;
+      margin: 0;
+      text-indent: -9999px;
+      top: auto;
+      width: 50%;
+      
+      &#small-urn {
+        background: image-url("jar-xsmall.png") no-repeat center bottom;
+        bottom: 0;
+        left: 0;
+       }
+    
+       &#large-urn {
+          bottom: 20px;
+          background: image-url("jar-med.png") no-repeat center top;
+	  height: 500px;
+          right: 0;
+        }
+      
+    }
+    
+    @media screen and (min-width: 800px) and (min-height: 665px) {
+	&#small-urn {
+          background: image-url("jar-small.png") no-repeat center bottom;
+          bottom: 0;
+          left: 0;
+        }
+    
+        &#large-urn {
+          bottom: 0;
+          background: image-url("jar-large.png") no-repeat center top;
+          height: 694px;
+          right: 0;
+        }
+    }
+    
+    &:hover, &:focus {
+      opacity: 1;
+    }
+  }
+}
+
+#marble {
+  background: rgba(0,0,0,.8) image-url("black-marble-sm.png") no-repeat center 45%;
+  @include box-sizing(border-box);
+  color: #ccc;
+  font-size: 1.5em;
+  height: 100%;
+  left: 0;
+  padding-top: 40px;
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  top: 0;
+  width: 100%;
+  z-index: 3;
+
+  @media screen and (min-width: 800px) and (min-height: 665px) {
+    font-size: 2em;
+  }	
+  &:after {
+    content: ' >';
+  }
+  &.final:after {
+    content: '';
+  }
+  
+  &.red {
+    background: rgba(0,0,0,.8) image-url("red-marble-sm.png") no-repeat center 45%;
+  }
+}
+
+#counter {
+  color: #eee;
+  font-size: 2em;
+  left: 0;
+  margin: 15px;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+
+#end {
+  h1, p {
+    text-align: center;
+  }
+  h1 {
+    font-weight: 300;
+    margin-top: 2em;
+  }
+}
