@@ -1,6 +1,7 @@
 .sass-cache
 *.csv
 *.rdb
+*.pem
 node_modules/
 sandbox/
 .DS_Store
